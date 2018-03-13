@@ -7,27 +7,26 @@ import pandas as pd
 
 class SDP:
     def __init__(self,**args):
-        assert 'scodes' in args
-        self.scodes = args['scodes']
-        self.rawdata = {}
-        self.rawdata_c = {}
+        assert 'scode' in args
+        self.scode = args['scode']
+        self.rawdata = None
+        self.rawdata_c = None
     def get_raw_data(self):
         """
         download raw data with quandl and store it into rawdata and rawdata_c
         """
-        for scode in self.scodes:
-            data = quandl.get("EOD/"+scode)[['Adj_Open','Adj_High','Adj_Low','Adj_Close','Adj_Volume']]
-            data.columns = ['O','H','L','C','V']
-            cl = data['C']
-            c1 = cl.shift(1)
-            lv = (data['V']+1).apply(np.log)
-            self.rawdata[scode] = data
-            self.rawdata_c[scode] = pd.DataFrame
-            self.rawdata_c[scode]['O'] = (self.rawdata[scode]['O']-c1)/c1
-            self.rawdata_c[scode]['H'] = (self.rawdata[scode]['H']-c1)/c1
-            self.rawdata_c[scode]['L'] = (self.rawdata[scode]['L']-c1)/c1
-            self.rawdata_c[scode]['C'] = (cl-c1)/c1
-            self.rawdata_c[scode]['V'] = lv - lv.shift(1)
+        data = quandl.get("EOD/"+self.scode)[['Adj_Open','Adj_High','Adj_Low','Adj_Close','Adj_Volume']]
+        data.columns = ['O','H','L','C','V']
+        cl = data['C']
+        c1 = cl.shift(1)
+        lv = (data['V']+1).apply(np.log)
+        self.rawdata = data
+        self.rawdata_c = pd.DataFrame()
+        self.rawdata_c['O'] = (self.rawdata['O']-c1)/c1
+        self.rawdata_c['H'] = (self.rawdata['H']-c1)/c1
+        self.rawdata_c['L'] = (self.rawdata['L']-c1)/c1
+        self.rawdata_c['C'] = (cl-c1)/c1
+        self.rawdata_c['V'] = lv - lv.shift(1)
 
 
     def __call__(self,ptype = None,on = None,shuffle = False,split_ratio = 1):

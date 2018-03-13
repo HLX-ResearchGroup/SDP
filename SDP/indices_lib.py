@@ -32,10 +32,15 @@ def vl_mean(data,datac,i):
     return datac['V'].rolling(window = i,center = False).mean()
 
 def kd(data,datac,i):
-    rsv = (data['C'] - rmmin(data,datac,i))/(rhmax(data,datac,i) - rmmin(data,datac,i))
-    k = rsv.ewm(alpha = 3/float(i),min_periods = i//3).mean()
-    d = k.ewm(alpha = 3/float(i),min_periods = i//3).mean()
+    rsv = (data['C'] - rmmin(data,datac,i+3))/(rhmax(data,datac,i+3) - rmmin(data,datac,i+3))
+    k = rsv.ewm(alpha = 3/float(i+3),min_periods = (i+3)//3).mean()
+    d = k.ewm(alpha = 3/float(i+3),min_periods = (i+3)//3).mean()
     return k,d
+
+def k(data,datac,i):
+    return kd(data,datac,i)[0]
+def d(data,datac,i):
+    return kd(data,datac,i)[1]
 
 def dma(data,datac,i):
     return (rsma(data,datac,i)-data['C'])/data['C']
@@ -62,10 +67,21 @@ def vortex(data,datac,i):
     ### VIP/VIN
     return SVMP/STR,SVMN/STR
 
+def vip(data,datac,i):
+    return vortex(data,datac,i)[0]
+def vin(data,datac,i):
+    return vortex(data,datac,i)[1]
+
 def boll(data,datac,i):
     ubb = rsma(data,datac,i) + 1.5*rstd(data,datac,i)
     lbb = rsma(data,datac,i) - 1.5*rstd(data,datac,i)
-    return ubb,lbb
+    return (data['C']-lbb)/(ubb-lbb)
+
+def variance(data,datac,i):
+    return datac['C'].rolling(window = i+1,center = False).std().apply(lambda x:min(5,max(0,x)))
 
 
 
+__idc = [k,d,dma,wr,rsi,vip,vin,boll,variance]
+__idn = ['k','d','dma','wr','rsi','vip','vin','boll','variance']
+indices = dict(zip(__idn,__idc))

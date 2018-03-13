@@ -1,21 +1,25 @@
 from .SDP import SDP
-class SDP2DCOV(SDP):
-	def __init__(self,**args):
-		SDP.__init__(self,args)
-		assert 'indices' in args
-		assert 'iwindow_size' in args
-		assert 'jwindow_size' in args
-		self.indices = args['indices']
-		self.iwindow_size = args['iwindow_size']
-		self.jwindow_size = args['jwindow_size']
-		try:
-			self.istride = args['istride']
-		except:
-			self.istride = 1
-		try:
-			self.jstride = args['jstride']
-		except:
-			self.jstride = 1
-		self.get_raw_data()
+from .indices_lib import *
+class SDP2DCONV(SDP):
+    def __init__(self,**args):
+        SDP.__init__(self,**args)
+        assert 'indices' in args
+        assert 'istop' in args
+        self.indices = args['indices']
+        self.istop = args['istop']
 
-	def 
+        try:
+            self.istride = args['istride']
+        except:
+            self.istride = 1
+
+        self.get_raw_data()
+
+    def cook(self):
+        self.channels = {}
+        for index in self.indices:
+            self.channels[index] = pd.DataFrame()
+            for i in range(1,self.istop,self.istride):
+                self.channels[index][i] = indices[index](self.rawdata,self.rawdata_c,i)
+            self.channels[index] = self.channels[index].fillna(0).replace(np.inf,0)
+
