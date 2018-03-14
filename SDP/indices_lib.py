@@ -73,8 +73,8 @@ def vin(data,datac,i):
     return vortex(data,datac,i)[1]
 
 def boll(data,datac,i):
-    ubb = rsma(data,datac,i) + 1.5*rstd(data,datac,i)
-    lbb = rsma(data,datac,i) - 1.5*rstd(data,datac,i)
+    ubb = rsma(data,datac,i+1) + 1.5*rstd(data,datac,i+1)
+    lbb = rsma(data,datac,i+1) - 1.5*rstd(data,datac,i+1)
     return (data['C']-lbb)/(ubb-lbb)
 
 def variance(data,datac,i):

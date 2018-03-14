@@ -29,7 +29,7 @@ class SDP:
         self.rawdata_c['V'] = lv - lv.shift(1)
 
 
-    def __call__(self,ptype = None,on = None,shuffle = False,split_ratio = 1):
+    def __call__(self,on = None,shuffle = False,split_ratio = 1):
         """
         process raw data and return traning/test data
 
@@ -38,10 +38,8 @@ class SDP:
         shuffle(bool): shuffle the training data or not
         split_ratio(float): precentage of data to be used as training data 
         """
-        assert ptype in ['regression','classification','unsupervised']
-        assert on in ['high','low','close','all',None]
-        if ptype == 'unsupervised':
-            on = None
+
+        assert on in ['H','L','C','all',None]
         assert split_ratio <= 1
         assert split_ratio >= 0
         return None
