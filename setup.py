@@ -3,7 +3,10 @@ from os import path,listdir
 from setuptools import setup,find_packages
 __version__ = "0.0.0.0"
 REQUIRES = [
-    'numpy>=1.12.1'
+    'numpy>=1.13.1',
+    'quandl>=3.2.0',
+    'pandas>=0.20.3',
+    
 ]
 setup(
     name = 'SDP',
