@@ -1,7 +1,7 @@
 import sys
 from os import path,listdir
 from setuptools import setup,find_packages
-__version__ = "0.0.0.3"
+__version__ = "0.0.0.9"
 REQUIRES = [
     'numpy>=1.13.1',
     'quandl>=3.2.0',
