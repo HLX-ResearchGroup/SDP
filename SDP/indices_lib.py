@@ -32,7 +32,7 @@ def vl_mean(data,datac,i):
     return datac['V'].rolling(window = i,center = False).mean()
 
 def kd(data,datac,i):
-    rsv = (data['C'] - rmmin(data,datac,i+3))/(rhmax(data,datac,i+3) - rmmin(data,datac,i+3))
+    rsv = (data['C'] - rmmin(data,datac,i+9))/(rhmax(data,datac,i+9) - rmmin(data,datac,i+9))
     k = rsv.ewm(alpha = 3/float(i+3),min_periods = (i+3)//3).mean()
     d = k.ewm(alpha = 3/float(i+3),min_periods = (i+3)//3).mean()
     return k,d
