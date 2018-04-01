@@ -80,7 +80,11 @@ def boll(data,datac,i):
 def variance(data,datac,i):
     return datac['C'].rolling(window = i+1,center = False).std().apply(lambda x:min(5,max(0,x)))
 
-
+def macd(data,datac,FI=12,SI=26,XI=9):
+    DIF = data.C.ewm(alpha = 1.0/float(FI),min_periods = FI).mean()-data.C.ewm(alpha = 1.0/float(SI),min_periods = SI).mean()
+    DEM = DIF.ewm(alpha = 1.0/float(XI),min_periods = XI).mean()
+    OSC = DIF - DEM
+    return DIF,DEM,OSC
 
 __idc = [k,d,dma,wr,rsi,vip,vin,boll,variance]
 __idn = ['k','d','dma','wr','rsi','vip','vin','boll','variance']

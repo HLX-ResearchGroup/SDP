@@ -3,7 +3,7 @@ from .indices_lib import *
 import os
 import numpy as np
 
-from mpl_finance import candlestick2_ochl
+from mpl_finance import plot_day_summary2_ohlc
 import matplotlib.pyplot as plt
 import PIL.Image as Image
 
@@ -73,24 +73,25 @@ class SDPIMG(SDP):
             y = self.cla_func(yD)
             x = []
 
-            _,ax = plt.subplots(1,1,figsize = (2,1))
-            candlestick2_ochl(
+            _,ax = plt.subplots(1,1,figsize = (4,2))
+            plot_day_summary2_ohlc(
                 colordown='black',
                 colorup='yellow',
                 closes=xD.C,
                 highs=xD.H,
                 lows=xD.L,
                 opens=xD.O,
-                ax=ax,
-                width=0.6,
-                alpha=1
+                ax=ax
             )
             ax.axes.get_xaxis().set_visible(False)
             ax.axes.get_yaxis().set_visible(False)
             ax.margins(0,0)
-            plt.savefig('x.png', bbox_inches='tight', pad_inches=-0.055)
-            x_x = Image.open('x.png').convert('L').resize(size=(self.w,self.h))
+            plt.savefig('x.png', bbox_inches='tight')
+            x_x = Image.open('x.png').convert('L')#.resize(size=(self.w,self.h))
             x.append(np.asarray(x_x))
+            plt.clf()
+
+
 
             axx = plt.subplot(111,sharex = ax)
             axx.plot(xD.VIN.reset_index(drop=True),color = 'yellow',linewidth = 2.5)
@@ -98,20 +99,23 @@ class SDPIMG(SDP):
             axx.axes.get_xaxis().set_visible(False)
             axx.axes.get_yaxis().set_visible(False)
             axx.margins(0,0)
-            plt.savefig('x.png', bbox_inches='tight', pad_inches=-0.055)
-            x_x = Image.open('x.png').convert('L').resize(size=(self.w,self.h))
+            plt.savefig('x.png', bbox_inches='tight')
+            x_x = Image.open('x.png').convert('L')#.resize(size=(self.w,self.h))
             x.append(np.asarray(x_x))
+            plt.clf()
+
 
             axxx = plt.subplot(111,sharex=ax)
             axxx.plot(xD.K.reset_index(drop = True),color = 'yellow')
-            axxx.plot(xD.D.reset_index(drop = True),color = 'blue')
+            axxx.plot(xD.D.reset_index(drop = True),color = 'black')
             axxx.axes.get_xaxis().set_visible(False)
             axxx.axes.get_yaxis().set_visible(False)
             axxx.margins(0,0)
-            plt.savefig('x.png', bbox_inches='tight', pad_inches=-0.055)
-            x_x = Image.open('x.png').convert('L').resize(size=(self.w,self.h))
+            plt.savefig('x.png', bbox_inches='tight')
+            x_x = Image.open('x.png').convert('L')#.resize(size=(self.w,self.h))
             x.append(np.asarray(x_x))
-
+            plt.clf()
+            plt.close()
             X.append(np.stack(x))
             Y.append(y)
 #            print(X)
