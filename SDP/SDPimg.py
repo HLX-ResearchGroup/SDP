@@ -16,6 +16,11 @@ def default_cla_func(D):
         return np.ones(1)
     return np.zeros(1)
 
+def optional_cla_func(D):
+	if D.L.iloc[-1]>D.H.iloc[0]:
+		return np.ones(1)
+	return np.zeros(1)
+
 
 class SDPIMG(SDP):
     def __init__(self,**args):
@@ -40,7 +45,7 @@ class SDPIMG(SDP):
         try:
             self.cla_func = args['cla_func']
         except:
-            self.cla_func = default_cla_func
+            self.cla_func = optional_cla_func
         try:
             self.cla_days = args['cla_days']
         except:
