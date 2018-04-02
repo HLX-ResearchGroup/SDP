@@ -55,12 +55,15 @@ class SDPIMG(SDP):
             self.h = 65
 
     def cook(self):
-
+        s1,s2,dd = macd(self.rawdata,None)
         self.rawdata['K'] = k(self.rawdata,self.rawdata_c,self.kd_p)
         self.rawdata['D'] = d(self.rawdata,self.rawdata_c,self.kd_p)
         self.rawdata['R'] = wr(self.rawdata,self.rawdata_c,self.wr_p)
         self.rawdata['VIP'] = vip(self.rawdata,self.rawdata_c,self.vot_p)
         self.rawdata['VIN'] = vin(self.rawdata,self.rawdata_c,self.vot_p)
+        self.rawdata['DIF'] = s1
+        self.rawdata['DEM'] = s2
+        self.rawdata['OSC'] = dd
         self.rawdata = self.rawdata.dropna()
 
     def __call__(self):
@@ -87,40 +90,74 @@ class SDPIMG(SDP):
             ax.axes.get_yaxis().set_visible(False)
             ax.margins(0,0)
             plt.savefig('x.png', bbox_inches='tight')
-            x_x = Image.open('x.png').convert('L')#.resize(size=(self.w,self.h))
+            x_x = Image.open('x.png').convert('L')
             x.append(np.asarray(x_x))
             plt.clf()
 
 
 
             axx = plt.subplot(111,sharex = ax)
-            axx.plot(xD.VIN.reset_index(drop=True),color = 'yellow',linewidth = 2.5)
-            axx.plot(xD.VIP.reset_index(drop=True),color = 'black',linewidth = 2.5)
+            axx.plot(xD.VIN.reset_index(drop=True),color = 'yellow')
+            axx.plot(xD.VIP.reset_index(drop=True),color = 'black')
             axx.axes.get_xaxis().set_visible(False)
             axx.axes.get_yaxis().set_visible(False)
             axx.margins(0,0)
             plt.savefig('x.png', bbox_inches='tight')
-            x_x = Image.open('x.png').convert('L')#.resize(size=(self.w,self.h))
+            x_x = Image.open('x.png').convert('L')
             x.append(np.asarray(x_x))
             plt.clf()
 
 
-            axxx = plt.subplot(111,sharex=ax)
+            axxx = plt.subplot(111,sharex = ax)
             axxx.plot(xD.K.reset_index(drop = True),color = 'yellow')
             axxx.plot(xD.D.reset_index(drop = True),color = 'black')
             axxx.axes.get_xaxis().set_visible(False)
             axxx.axes.get_yaxis().set_visible(False)
             axxx.margins(0,0)
             plt.savefig('x.png', bbox_inches='tight')
-            x_x = Image.open('x.png').convert('L')#.resize(size=(self.w,self.h))
+            x_x = Image.open('x.png').convert('L')
             x.append(np.asarray(x_x))
             plt.clf()
+
+            
+
+            axx = plt.subplot(111,sharex = ax)
+            axx.plot(xD.DIF.reset_index(drop = True),color = 'yellow')
+            axx.plot(xD.DEM.reset_index(drop = True),color = 'black')
+            axx.axes.get_xaxis().set_visible(False)
+            axx.axes.get_yaxis().set_visible(False)
+            axx.margins(0,0)
+            plt.savefig('x.png', bbox_inches='tight')
+            x_x = Image.open('x.png').convert('L')
+            x.append(np.asarray(x_x))
+            plt.clf()
+
+            axxx = plt.subplot(111,sharex = ax)
+            axxx.bar(range(self.wsize),xD.V)
+            axxx.axes.get_xaxis().set_visible(False)
+            axxx.axes.get_yaxis().set_visible(False)
+            axxx.margins(0,0)
+            plt.savefig('x.png', bbox_inches='tight')
+            x_x = Image.open('x.png').convert('L')
+            x.append(np.asarray(x_x))
+            plt.clf()
+
+            axx = plt.subplot(111,sharex = ax)
+            axx.bar(range(self.wsize),xD.OSC)
+            axx.axes.get_xaxis().set_visible(False)
+            axx.axes.get_yaxis().set_visible(False)
+            axx.margins(0,0)
+            plt.savefig('x.png', bbox_inches='tight')
+            x_x = Image.open('x.png').convert('L')
+            x.append(np.asarray(x_x))
+            plt.clf()
+
             plt.close()
             X.append(np.stack(x))
             Y.append(y)
 #            print(X)
         try:
-            return np.stack(X),np.stack(Y)
+            return np.stack(X).transpose(0,2,3,1),np.stack(Y)
         except:
             print(X)
             print(Y)
